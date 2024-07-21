@@ -1,0 +1,7 @@
+# ninja log v6
+19	1210	7432735887677879	CMakeFiles/AlgoViz.dir/src/particles.c.obj	b08274fd5247fc17
+13	1213	7432735887616828	CMakeFiles/AlgoViz.dir/src/menu.c.obj	7961ce7c758c773e
+2	1214	7432735887363470	CMakeFiles/AlgoViz.dir/src/main.c.obj	ca560f3358c6cd46
+37	1222	7432735887851239	CMakeFiles/AlgoViz.dir/src/visualization.c.obj	86fbf0826a866d0f
+8	1217	7432735887519696	CMakeFiles/AlgoViz.dir/src/app.c.obj	8543d39b7cd1dfdb
+1222	1474	7432735899708353	AlgoViz.exe	3f43b0ddceeaae8d
