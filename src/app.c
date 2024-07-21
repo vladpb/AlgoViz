@@ -59,34 +59,32 @@ void cleanupApp(VisualizerApp* app) {
     SDL_Quit();
 }
 
-void handleEvents(VisualizerApp* app) {
-    SDL_Event e;
-    while (SDL_PollEvent(&e) != 0) {
-        if (e.type == SDL_QUIT) {
-            app->state = QUIT_STATE;
-        } else if (e.type == SDL_MOUSEBUTTONDOWN) {
-            int mouseX, mouseY;
-            SDL_GetMouseState(&mouseX, &mouseY);
+void handleEvents(VisualizerApp* app, SDL_Event* event) {
+    if (event->type == SDL_QUIT) {
+        app->state = QUIT_STATE;
+    } else if (event->type == SDL_MOUSEBUTTONDOWN) {
+        int mouseX, mouseY;
+        SDL_GetMouseState(&mouseX, &mouseY);
 
-            if (app->state == VISUALIZATION_STATE) {
-                SDL_Rect pauseButton = {10, 10, 80, 40};
-                SDL_Rect stepButton = {100, 10, 80, 40};
-                SDL_Rect resetButton = {190, 10, 80, 40};
-                SDL_Rect backButton = {280, 10, 80, 40};
+        if (app->state == VISUALIZATION_STATE) {
+            SDL_Rect pauseButton = {10, 10, 80, 40};
+            SDL_Rect stepButton = {100, 10, 80, 40};
+            SDL_Rect resetButton = {190, 10, 80, 40};
+            SDL_Rect backButton = {280, 10, 80, 40};
 
-                if (SDL_PointInRect(&(SDL_Point){mouseX, mouseY}, &pauseButton)) {
-                    app->sortingState.isPaused = !app->sortingState.isPaused;
-                } else if (SDL_PointInRect(&(SDL_Point){mouseX, mouseY}, &stepButton)) {
-                    app->sortingState.shouldStep = true;
-                    app->sortingState.isPaused = true;
-                } else if (SDL_PointInRect(&(SDL_Point){mouseX, mouseY}, &resetButton)) {
-                    resetSorting(&app->sortingState);
-                    initVisualization(app->windowHeight);
-                } else if (SDL_PointInRect(&(SDL_Point){mouseX, mouseY}, &backButton)) {
-                    app->state = ALGORITHM_MENU_STATE;
-                    resetSorting(&app->sortingState);
-                }
+            if (SDL_PointInRect(&(SDL_Point){mouseX, mouseY}, &pauseButton)) {
+                app->sortingState.isPaused = !app->sortingState.isPaused;
+            } else if (SDL_PointInRect(&(SDL_Point){mouseX, mouseY}, &stepButton)) {
+                app->sortingState.shouldStep = true;
+                app->sortingState.isPaused = true;
+            } else if (SDL_PointInRect(&(SDL_Point){mouseX, mouseY}, &resetButton)) {
+                resetSorting(&app->sortingState);
+                initVisualization(app->windowHeight);
+            } else if (SDL_PointInRect(&(SDL_Point){mouseX, mouseY}, &backButton)) {
+                app->state = ALGORITHM_MENU_STATE;
+                resetSorting(&app->sortingState);
             }
+        }
             Button* buttons = getButtons();
             int buttonCount = getButtonCount();
             for (int i = 0; i < buttonCount; i++) {
@@ -124,4 +122,3 @@ void handleEvents(VisualizerApp* app) {
             }
         }
     }
-}

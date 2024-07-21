@@ -20,7 +20,9 @@ add_executable(AlgoViz src/main.c
         src/particles.c
         src/particles.h
         src/visualization.c
-        src/visualization.h)
+        src/visualization.h
+        src/sorting.c
+        src/sorting.h)
 
 target_link_libraries(AlgoViz SDL2main SDL2 SDL2_ttf)
 

@@ -29,6 +29,6 @@ typedef struct {
 
 void initApp(VisualizerApp* app, int width, int height);
 void cleanupApp(VisualizerApp* app);
-void handleEvents(VisualizerApp* app);
+void handleEvents(VisualizerApp* app, SDL_Event* event);
 
 #endif //ALGOVIZ_APP_H

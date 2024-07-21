@@ -84,6 +84,13 @@ build CMakeFiles/AlgoViz.dir/src/visualization.c.obj: C_COMPILER__AlgoViz_unscan
   OBJECT_DIR = CMakeFiles\AlgoViz.dir
   OBJECT_FILE_DIR = CMakeFiles\AlgoViz.dir\src
 
+build CMakeFiles/AlgoViz.dir/src/sorting.c.obj: C_COMPILER__AlgoViz_unscanned_Debug C$:/Users/vlad_/CLionProjects/AlgoViz/src/sorting.c || cmake_object_order_depends_target_AlgoViz
+  DEP_FILE = CMakeFiles\AlgoViz.dir\src\sorting.c.obj.d
+  FLAGS = -g -std=gnu11 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/vlad_/CLionProjects/AlgoViz/libs/SDL2/include -IC:/Users/vlad_/CLionProjects/AlgoViz/libs/SDL2_ttf/include
+  OBJECT_DIR = CMakeFiles\AlgoViz.dir
+  OBJECT_FILE_DIR = CMakeFiles\AlgoViz.dir\src
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target AlgoViz
@@ -92,7 +99,7 @@ build CMakeFiles/AlgoViz.dir/src/visualization.c.obj: C_COMPILER__AlgoViz_unscan
 #############################################
 # Link the executable AlgoViz.exe
 
-build AlgoViz.exe: C_EXECUTABLE_LINKER__AlgoViz_Debug CMakeFiles/AlgoViz.dir/src/main.c.obj CMakeFiles/AlgoViz.dir/src/app.c.obj CMakeFiles/AlgoViz.dir/src/menu.c.obj CMakeFiles/AlgoViz.dir/src/particles.c.obj CMakeFiles/AlgoViz.dir/src/visualization.c.obj
+build AlgoViz.exe: C_EXECUTABLE_LINKER__AlgoViz_Debug CMakeFiles/AlgoViz.dir/src/main.c.obj CMakeFiles/AlgoViz.dir/src/app.c.obj CMakeFiles/AlgoViz.dir/src/menu.c.obj CMakeFiles/AlgoViz.dir/src/particles.c.obj CMakeFiles/AlgoViz.dir/src/visualization.c.obj CMakeFiles/AlgoViz.dir/src/sorting.c.obj
   FLAGS = -g
   LINK_FLAGS = -mwindows
   LINK_LIBRARIES = -lSDL2main  -lSDL2  -lSDL2_ttf  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
