@@ -2,6 +2,9 @@
 #include "menu.h"
 #include <stdio.h>
 #include <string.h>
+#include <SDL.h>
+#include <SDL_ttf.h>
+#include "visualization.h"
 
 void initApp(VisualizerApp* app, int width, int height) {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -11,6 +14,7 @@ void initApp(VisualizerApp* app, int width, int height) {
 
     if (TTF_Init() == -1) {
         printf("SDL_ttf could not initialize! TTF_Error: %s\n", TTF_GetError());
+        SDL_Quit();
         exit(1);
     }
 
@@ -20,18 +24,31 @@ void initApp(VisualizerApp* app, int width, int height) {
                                    SDL_WINDOW_SHOWN);
     if (app->window == NULL) {
         printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
+        TTF_Quit();
+        SDL_Quit();
         exit(1);
+    
     }
 
     app->renderer = SDL_CreateRenderer(app->window, -1, SDL_RENDERER_ACCELERATED);
     if (app->renderer == NULL) {
         printf("Renderer could not be created! SDL_Error: %s\n", SDL_GetError());
+        SDL_DestroyWindow(app->window);
+        TTF_Quit();
+        SDL_Quit();
         exit(1);
     }
 
-    app->font = TTF_OpenFont("C:/Users/vlad_/CLionProjects/AlgoViz/assets/fonts/DIN_Regular.ttf", 24);
+    char fontPath[256];
+    snprintf(fontPath, sizeof(fontPath), "assets/fonts/DIN_Regular.ttf", SDL_GetBasePath());
+    app->font = TTF_OpenFont(fontPath, 24);
     if (app->font == NULL) {
         printf("Failed to load font! TTF_Error: %s\n", TTF_GetError());
+        printf("Attempted to load font from: %s\n", fontPath);
+        SDL_DestroyRenderer(app->renderer);
+        SDL_DestroyWindow(app->window);
+        TTF_Quit();
+        SDL_Quit();
         exit(1);
     }
 
@@ -67,19 +84,24 @@ void handleEvents(VisualizerApp* app, SDL_Event* event) {
         SDL_GetMouseState(&mouseX, &mouseY);
 
         if (app->state == VISUALIZATION_STATE) {
+            SDL_Rect startPauseButton = {10, 10, 80, 40};
             SDL_Rect pauseButton = {10, 10, 80, 40};
             SDL_Rect stepButton = {100, 10, 80, 40};
             SDL_Rect resetButton = {190, 10, 80, 40};
             SDL_Rect backButton = {280, 10, 80, 40};
 
-            if (SDL_PointInRect(&(SDL_Point){mouseX, mouseY}, &pauseButton)) {
-                app->sortingState.isPaused = !app->sortingState.isPaused;
-            } else if (SDL_PointInRect(&(SDL_Point){mouseX, mouseY}, &stepButton)) {
-                app->sortingState.shouldStep = true;
-                app->sortingState.isPaused = true;
+            if (SDL_PointInRect(&(SDL_Point){mouseX, mouseY}, &startPauseButton)) {
+                if (!app->sortingState.hasStarted) {
+                    app->sortingState.hasStarted = true;
+                    app->sortingState.isPaused = false;
+                } else {
+                    app->sortingState.isPaused = !app->sortingState.isPaused;
+                }
+
             } else if (SDL_PointInRect(&(SDL_Point){mouseX, mouseY}, &resetButton)) {
                 resetSorting(&app->sortingState);
-                initVisualization(app->windowHeight);
+                initVisualization(app->windowHeight, &app->sortingState);
+                app->sortingState.hasStarted = false;
             } else if (SDL_PointInRect(&(SDL_Point){mouseX, mouseY}, &backButton)) {
                 app->state = ALGORITHM_MENU_STATE;
                 resetSorting(&app->sortingState);

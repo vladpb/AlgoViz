@@ -15,7 +15,7 @@ int main(int argc, char* argv[]) {
     VisualizerApp app;
     initApp(&app, WINDOW_WIDTH, WINDOW_HEIGHT);
     initParticles(WINDOW_WIDTH, WINDOW_HEIGHT);
-    initVisualization(WINDOW_HEIGHT);
+    initVisualization(WINDOW_HEIGHT, &app.sortingState);
 
     Slider speedSlider = {
         .bar = {WINDOW_WIDTH - 220, WINDOW_HEIGHT - 50, 200, 20},
@@ -25,7 +25,15 @@ int main(int argc, char* argv[]) {
         .currentValue = 50
     };
 
+    Uint32 lastTime = SDL_GetTicks();
+
     while (app.state != QUIT_STATE) {
+        Uint32 currentTime = SDL_GetTicks();
+        //float deltaTime = (currentTime - lastTime) / 1000.0f;
+        lastTime = currentTime;
+        float deltaTime = 0.016f; // Assuming a frame time of roughly 60 FPS
+        updateAnimation(&app.sortingState, deltaTime);
+
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
             handleEvents(&app, &event);
@@ -33,6 +41,7 @@ int main(int argc, char* argv[]) {
                 handleSliderEvent(&speedSlider, &event);
             }
         }
+
         //Clear the renderer at the start of each frame
         SDL_SetRenderDrawColor(app.renderer, 0, 0, 0, 255);
         SDL_RenderClear(app.renderer);
@@ -52,10 +61,12 @@ int main(int argc, char* argv[]) {
                 updateAndRenderParticles(app.renderer, app.windowWidth, app.windowHeight);
                 break;
             case VISUALIZATION_STATE:
-                updateSorting(app.selectedAlgorithm, arrayToSort, ARRAY_SIZE, &app.sortingState);
+                updateAnimation(&app.sortingState, deltaTime);
+                if (app.sortingState.hasStarted) {
+                    updateSorting(app.selectedAlgorithm, arrayToSort, ARRAY_SIZE, &app.sortingState);
+                }
                 renderVisualization(app.renderer, app.font, app.windowWidth, app.windowHeight,
                                     app.selectedDataStructure, app.selectedAlgorithm, &app.sortingState, &speedSlider);
-                SDL_Delay(101 - speedSlider.currentValue);
                 break;
             case SETTINGS_STATE:
                 // Implement settings rendering
@@ -63,6 +74,10 @@ int main(int argc, char* argv[]) {
         }
         SDL_RenderPresent(app.renderer);
         SDL_Delay(16);
+        //Uint32 frameTime = SDL_GetTicks() - frameStart;
+        //if (frameTime < 16) {
+        //    SDL_Delay(16 - frameTime);
+        //}
     }
 
     cleanupApp(&app);
